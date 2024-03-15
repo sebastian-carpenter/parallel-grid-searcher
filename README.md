@@ -4,7 +4,7 @@ This project takes most of its inital inspiration from problem 11 of the Euler p
 I developed a solution for it and later decided to parallelize it. The normal version and parallelized version are both shown in this repository.
 
 The important parallelized code is at **./cversion/legacy_rev/legacy_rev_row.c**.
-This version is functional and has been tested. The results of testing can be found in the included spreadsheet.
+This version is functional and has been tested. The results of testing can be found in parallel_data.xlsx
 
 When compiling the parallelized programs be sure to use the appropriate pthread compile flag this may be something like **pthread** or **lpthread**.
 
