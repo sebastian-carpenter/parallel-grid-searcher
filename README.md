@@ -71,7 +71,7 @@ This is a 20x20 grid which should result in the value 70600674 when computed. Th
 
 This folder houses the somewhat original solution to the Euler project, problem 11.
 
-## 11_1_advanced.c
+### 11_1_advanced.c
 
 This one does not work anymore because it relies on two header files which have been changed extensively. The original solution to problem 11 was not as modular as this one which is why this one is denoted advanced. It is the precursor to legacy_row.c
 
