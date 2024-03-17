@@ -6,6 +6,8 @@
 
 /*
  * Parameters: grid file (.txt format), size of grid, multiplier, thread count
+ *
+ * Do not run this program with more threads than the size of the grid it will not work
  */
 
 #include <stdio.h>
@@ -63,8 +65,26 @@ int main(int argc, char * argv[]){
 
     // perform computations on each row (parallel)
     int modThread = 0;
+
+    // bootstart computations
+    for(int i = 0; i < NTHREADS; i++){
+        parallel_args * calculate_args = malloc(sizeof(parallel_args));
+        *calculate_args = (parallel_args){.array_info = &array_info, .i = i};
+
+        pthread_create(&threads[modThread], NULL, calculate_step, (void *) calculate_args);
+
+        modThread++;
+    }
+
+    modThread = 0;
+
     for(int k = 0; k < multiplier; k++){
-        for(int i = 0; i < size; i++){
+        for(int i = NTHREADS; i < size; i++){
+
+            // join thread before spooling another task
+            if(pthread_join(threads[modThread], NULL) != 0)
+                printf("Something died\n");
+
             parallel_args * calculate_args = malloc(sizeof(parallel_args));
             *calculate_args = (parallel_args){.array_info = &array_info, .i = i};
 
@@ -72,13 +92,11 @@ int main(int argc, char * argv[]){
 
             modThread++;
 
-            // wait for threads to finish to prevent errors
+            // reset thread counter when cap reached
             if(modThread == NTHREADS)
-                join_threads(threads, &modThread);
+                modThread = 0;
         }
     }
-
-    join_threads(threads, &modThread);
 
 
     /* --- consolidate answers --- */
@@ -86,6 +104,11 @@ int main(int argc, char * argv[]){
 
     // locate biggest value in each row (parallel)
     for(int i = 0; i < size; i++){
+
+        // join thread before spooling another task
+        if(pthread_join(threads[modThread], NULL) != 0)
+            printf("Something died\n");
+
         parallel_args * determine_args = malloc(sizeof(parallel_args));
         *determine_args = (parallel_args){.array_info = &array_info, .i = i};
 
@@ -95,10 +118,13 @@ int main(int argc, char * argv[]){
 
         // wait for threads to finish to prevent errors
         if(modThread == NTHREADS)
-            join_threads(threads, &modThread);
+            modThread = 0;
     }
 
-    join_threads(threads, &modThread);
+    // join threads before absolute maximum is determined
+    for(int i = 0; i < NTHREADS; i++)
+        if(pthread_join(threads[i], NULL) != 0)
+            printf("Something died\n");
 
     // determine biggest value total (serial)
     // NOTE: answer array is changed when the values were compared in parallel above

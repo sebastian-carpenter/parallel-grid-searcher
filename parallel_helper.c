@@ -43,12 +43,3 @@ void * determine(void * input){
 
     return NULL;
 }
-
-void join_threads(pthread_t threads[], int * modThread){
-    
-    for(int i = 0 ; i < *modThread; i++)
-        if(pthread_join(threads[i], NULL) != 0)
-            printf("Something died\n");
-
-    *modThread = 0;
-}

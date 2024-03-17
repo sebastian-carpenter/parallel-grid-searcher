@@ -24,9 +24,4 @@ void * calculate_step(void *);
 // output: NULL
 void * determine(void *);
 
-// wait for spooled threads to finish and reset the thread counter
-// input: 1D array of pthreads, number of threads to join
-// output : void
-void join_threads(pthread_t [], int *);
-
 #endif

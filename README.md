@@ -4,9 +4,11 @@ This project takes most of its inital inspiration from problem 11 of the Euler p
 I developed a solution for it and later decided to parallelize it. The normal version and parallelized version are both shown in this repository.
 
 The important parallelized code is at **./cversion/legacy_rev/legacy_rev_row.c**.
-This version is functional and has been tested. The results of testing can be found in parallel_data.xlsx
+This version is functional and has been tested. The results of testing can be found in legacy_rev_row_data.xlsx
 
 When compiling the parallelized programs be sure to use the appropriate pthread compile flag this may be something like **pthread** or **lpthread**.
+
+Generally I compile with gcc -o legacy_rev_row legacy_rev_row.c ../../array_generator.c ../../calculate.c ../../parallel_helper.c -Wall -pthread
 
 In the root directory you will notice three files array_generator, calculate, and parallel_helper. These files are used by various versions of the program and thus represent different modules that are used during runtime. These will be explained later.
 
