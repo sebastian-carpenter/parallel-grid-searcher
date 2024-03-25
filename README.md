@@ -31,13 +31,21 @@ This is better by a mile than legacy_rev_row.c.
 The major inconsistencies with speed present in legacy_rev_row are fixed in this version due to how information is now accessed and stored by threads. Additionally various parts of the program have been rewritten or reworked.
 
 A general catalog of changes is contained below:
+
     * Variable access and assignment with threads is now optimized.
+    
     * calculate.c has been optimized.
+    
     * There is more of an overhead for starting the program but runtime is much faster.
+    
         * This is more apparent with complex calculations; with simple calculations, like this program, the overhead can take longer than before.
+        
     * Answers are now stored more efficiently and with less wasted space.
+    
         * Answers are now much faster to search through as well.
+        
     * array_generator and parallel_helper have been altered to conform to the changes.
+    
 
 ## ./serial/serial_search.c
 
@@ -45,7 +53,7 @@ This is much better than the previous serial algorithm present in version_0.
 
 This version has been reprogrammed to mesh with the new files used for parallel_search.c.
 
-Performance expectation - a little under twice as fast as before.\
+Performance expectation - a little under twice as fast as before.
 
 This performance is mostly thanks to the optimizations done for parallel_search. I think this is about the limit for performance on serial_search though.
 
