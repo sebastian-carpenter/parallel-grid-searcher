@@ -3,22 +3,53 @@
 This project takes most of its inital inspiration from problem 11 of the Euler project.
 I developed a solution for it and later decided to parallelize it. The normal version and parallelized version are both shown in this repository.
 
-The important parallelized code is at **./cversion/legacy_rev/legacy_rev_row.c**.
-This version is functional and has been tested. The results of testing can be found in legacy_rev_row_data.xlsx
+The important parallelized code is at **./version_1/cversion/parallel/parallel_search.c**.
+This version is functional and has been tested. The results of testing can be found in version_1.xlsx
 
 When compiling the parallelized programs be sure to use the appropriate pthread compile flag this may be something like **pthread** or **lpthread**.
 
-Generally I compile with gcc -o legacy_rev_row legacy_rev_row.c ../../array_generator.c ../../calculate.c ../../parallel_helper.c -Wall -pthread
+Generally I compile with gcc -o parallel_search parallel_search.c ../../array_generator.c ../../calculate.c ../../parallel_helper.c -Wall -pthread
 
-In the root directory you will notice three files array_generator, calculate, and parallel_helper. These files are used by various versions of the program and thus represent different modules that are used during runtime. These will be explained later.
+In the root of each version you will notice three files array_generator, calculate, and parallel_helper. These files are used by various sections of the program and thus represent different modules that are used during runtime. These will be explained later.
 
-The most important folder is cversion which houses the actual working version of the parallel grid searcher.
+The most important folder is version_1 which houses the actual working version of the parallel grid searcher.
 
 The grids folder houses a utility for creating grids and is also where the grids are stored.
 
-The normversion folder holds the altered version of my solution to problem 11 of the Euler project.
+All the original code (which includes the dregs) is stored in version_0
 
-Lastly, pyversion contains the program I attempted to make which would utilize .so versions of my .c files, that way I could parallelize the program through Python (this failed).
+The normversion folder, in version_0, holds the altered version of my solution to problem 11 of the Euler project.
+
+Lastly, pyversion, in version_0, contains the program I attempted to make which would utilize .so versions of my .c files, that way I could parallelize the program through Python (this failed).
+
+# version_1
+
+## ./parallel/parallel_search.c
+
+This is better by a mile than legacy_rev_row.c.
+
+The major inconsistencies with speed present in legacy_rev_row are fixed in this version due to how information is now accessed and stored by threads. Additionally various parts of the program have been rewritten or reworked.
+
+A general catalog of changes is contained below:
+    * Variable access and assignment with threads is now optimized.
+    * calculate.c has been optimized.
+    * There is more of an overhead for starting the program but runtime is much faster.
+        * This is more apparent with complex calculations; with simple calculations, like this program, the overhead can take longer than before.
+    * Answers are now stored more efficiently and with less wasted space.
+        * Answers are now much faster to search through as well.
+    * array_generator and parallel_helper have been altered to conform to the changes.
+
+## ./serial/serial_search.c
+
+This is much better than the previous serial algorithm present in version_0.
+
+This version has been reprogrammed to mesh with the new files used for parallel_search.c.
+
+Performance expectation - a little under twice as fast as before.\
+
+This performance is mostly thanks to the optimizations done for parallel_search. I think this is about the limit for performance on serial_search though.
+
+# version_0 - deprecated
 
 # ./cversion
 
@@ -45,7 +76,7 @@ The only file in this folder is legacy_rev_row.c and it is effectively the curre
 ### legacy_rev_row.c
 parameters - .txt grid file, size of grid, multiplier, number of threads
 
-Much like legacy_row.c, legacy_rev_row gives each thread a unique row to calculate. The method for providing this row differes slightly since it uses an altered struct (still used for passing arguments when creating a thread) and a new struct which holds information throughout the duration of the program.
+Much like legacy_row.c, legacy_rev_row gives each thread a unique row to calculate. The method for providing this row differs slightly since it uses an altered struct (still used for passing arguments when creating a thread) and a new struct which holds information throughout the duration of the program.
 
 A new header file was created called parallel_helper which 'helps' modularize the parallel function calls.
 
@@ -89,9 +120,25 @@ Without going into too much detail, this is my failed attempt at parallelizing t
 
 # header files
 
+# version_1
+
 ## array_generator
 
-This one generates the 2D and 3D arrays used throughout the program. The 2D array requires file I/O and so is more complex than the 3D one to allocate. Both are allocated using malloc and so grids are limited in size to roughly 40000 x 40000 I think, but I have never tried it. A better implementation could fix this but grids greater than 10000 x 10000 are excessive for testing, so it would be unnecessary.
+This one creates the structs used throughout the program. The create_structs function requires file I/O and can return an error. Grids are allocated using malloc so grids might be limited in size, but I am unsure if there is an actual limit. I tried with a 100000x100000 grid and it never stopped allocating until I ran out of patience.
+
+## calculate
+
+This does all the calculations for the programs. Currently it computes the largest product of 4 numbers in the vertical, horizontal and both diagonal directions. Each function call revolves around a cell which serves as the origin for performing the 4 computations. The handling of variables is a little funky but it improves performance.
+
+## parallel_helper
+
+This is the middleman for the parallel functions. When a pthread is started up it will call calculate_step and begin calculating a row.
+
+# version_0
+
+## array_generator
+
+This one generates the 2D and 3D arrays used throughout the program. The 2D array requires file I/O and so is more complex than the 3D one to allocate. The answer array and grid are allocated using malloc so they might be limited in size, but I am unsure if there is an actual limit. I tried with a 100000x100000 grid and it never stopped allocating until I ran out of patience.
 
 ## calculate
 
