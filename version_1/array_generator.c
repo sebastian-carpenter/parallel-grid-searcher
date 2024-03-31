@@ -41,7 +41,7 @@ int allocate_structs(char * file_name, array_information * array_info, int num_a
         num_arrays--;
         // numbers
         array_info->numbers = malloc(sizeof(int) * size * size);
-        memcpy(array_info->numbers, numbers, size * size * 4); // an int is 4 bytes
+        memcpy(array_info->numbers, numbers, sizeof(int) * size * size);
         // others
         array_info->answers = answers;
         array_info->size = size;
