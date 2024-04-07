@@ -3,7 +3,7 @@
 #include "calculate.h"
 #include "array_generator.h"
 
-void calculate(array_information * array_info, int i, int j, long * largestAnswer){
+void calculate(array_information * array_info, int i, int j, long * largest_answer){
 
     int size = array_info->size;
     int LIMIT = size - 3;
@@ -67,34 +67,34 @@ void calculate(array_information * array_info, int i, int j, long * largestAnswe
         tempSum = vert;
 
     // if the new sum is less, then we don't care about this run
-    if(tempSum < largestAnswer[0])
+    if(tempSum < largest_answer[0])
         return;
 
-    largestAnswer[0] = tempSum;
+    largest_answer[0] = tempSum;
 
     // assign associated factors
     if(tempSum == diag1){
-        largestAnswer[1] = numbers[0];
-        largestAnswer[2] = numbers[size + 1];
-        largestAnswer[3] = numbers[(2 * size) + 2];
-        largestAnswer[4] = numbers[(3 * size) + 3];
+        largest_answer[1] = numbers[0];
+        largest_answer[2] = numbers[size + 1];
+        largest_answer[3] = numbers[(2 * size) + 2];
+        largest_answer[4] = numbers[(3 * size) + 3];
     }
     else if(tempSum == diag2){
-        largestAnswer[1] = numbers[(3 * size)];
-        largestAnswer[2] = numbers[(2 * size) + 1];
-        largestAnswer[3] = numbers[size + 2];
-        largestAnswer[4] = numbers[3];
+        largest_answer[1] = numbers[(3 * size)];
+        largest_answer[2] = numbers[(2 * size) + 1];
+        largest_answer[3] = numbers[size + 2];
+        largest_answer[4] = numbers[3];
     }
     else if(tempSum == horz){
-        largestAnswer[1] = numbers[0];
-        largestAnswer[2] = numbers[1];
-        largestAnswer[3] = numbers[2];
-        largestAnswer[4] = numbers[3];
+        largest_answer[1] = numbers[0];
+        largest_answer[2] = numbers[1];
+        largest_answer[3] = numbers[2];
+        largest_answer[4] = numbers[3];
     }
     else if(tempSum == vert){
-        largestAnswer[1] = numbers[0];
-        largestAnswer[2] = numbers[size];
-        largestAnswer[3] = numbers[(2 * size)];
-        largestAnswer[4] = numbers[(3 * size)];
+        largest_answer[1] = numbers[0];
+        largest_answer[2] = numbers[size];
+        largest_answer[3] = numbers[(2 * size)];
+        largest_answer[4] = numbers[(3 * size)];
     }
 }

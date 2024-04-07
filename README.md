@@ -3,8 +3,9 @@
 This project takes most of its inital inspiration from problem 11 of the Euler project.
 I developed a solution for it and later decided to parallelize it. The normal version and parallelized version are both shown in this repository.
 
-The important parallelized code is at **./version_1/cversion/parallel/parallel_search.c**.
-This version is functional and has been tested. The results of testing can be found in version_1.xlsx
+The important parallelized code is at **./version_1/cversion/parallel/parallel_search.c**,
+and **./version_2/cversion/parallel/parallel_search.c**.
+Both versions are functional and have been tested. The results of testing can be found in version_1.xlsx and version_2.xlsx.
 
 When compiling the parallelized programs be sure to use the appropriate pthread compile flag this may be something like **pthread** or **lpthread**.
 
@@ -12,15 +13,45 @@ Generally I compile with gcc -o parallel_search parallel_search.c ../../array_ge
 
 In the root of each version you will notice three files array_generator, calculate, and parallel_helper. These files are used by various sections of the program and thus represent different modules that are used during runtime. These will be explained later.
 
-The most important folder is version_1 which houses the actual working version of the parallel grid searcher.
+The most important folders are version_1 and version_2 which house two types of the parallel grid searcher.
 
 The grids folder houses a utility for creating grids and is also where the grids are stored.
 
-All the original code (which includes the dregs) is stored in version_0
+All the original code (which includes the bad paralle code) is stored in version_0.
 
 The normversion folder, in version_0, holds the altered version of my solution to problem 11 of the Euler project.
 
 Lastly, pyversion, in version_0, contains the program I attempted to make which would utilize .so versions of my .c files, that way I could parallelize the program through Python (this failed).
+
+# version_2
+
+The serial version and parallel version are pretty much the same except for a few changes.
+
+Parallel:
+
+    * This version is faster but may be a bit less consistent (speedwise) according to the results I got.
+
+    * A mutex has been added for synchronized answer storage.
+
+    * Threads are not spooled for each row now. Instead threads are spooled at the beginning and work until all the calculations are done.
+
+        * This is done by incrementing the threads row value by the number of threads. I call this stride in the program.
+
+    * The big answer array[size] is gone and has been replaced with a smaller array[5].
+
+    * The answers array is now called answer instead.
+
+    * Array_information now contains the number of threads and a pointer to the mutex.
+
+    * The answers array does not need to be searched for the largest value, instead the answer can be directly printed.
+
+Serial:
+
+    * Smaller answer array like above.
+
+    * 'improved' iteration through the grid for calculations.
+
+        * This may have actually hurt performance according to the data I got.
 
 # version_1
 

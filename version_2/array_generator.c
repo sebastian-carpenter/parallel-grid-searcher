@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 
 #include "array_generator.h"
 
 /* --- allocation --- */
 
-int allocate_structs(char * file_name, array_information * array_info, int num_arrays, long * answers, int size){
+int allocate_structs(char * file_name, array_information * array_info, int num_arrays, long * answer, pthread_mutex_t * mutex_answer, int NTHREADS, int size){
 
     // allocate 2D array as a 1D array
     array_info->numbers = malloc(sizeof(int) * size * size);
@@ -32,10 +33,13 @@ int allocate_structs(char * file_name, array_information * array_info, int num_a
 
     fclose(fptr);
 
-    array_info->answers = answers;
+    // fill in remaining spots of struct
+    array_info->answer = answer;
+    array_info->mutex_answer = mutex_answer;
+    array_info->NTHREADS = NTHREADS;
     array_info->size = size;
 
-    // fill remaining arrays
+    // fill remaining struct instances
     while(num_arrays > 1){
         array_info++;
         num_arrays--;
@@ -43,9 +47,15 @@ int allocate_structs(char * file_name, array_information * array_info, int num_a
         array_info->numbers = malloc(sizeof(int) * size * size);
         memcpy(array_info->numbers, numbers, sizeof(int) * size * size);
         // others
-        array_info->answers = answers;
+        array_info->answer = answer;
+        array_info->mutex_answer = mutex_answer;
+        array_info->NTHREADS = NTHREADS;
         array_info->size = size;
     }
+
+    // it is very important to do this, leaving a garbage
+    // value will probably ruin your results
+    answer[0] = 0;
 
     return 0;
 }

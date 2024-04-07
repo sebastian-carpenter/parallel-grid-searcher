@@ -26,18 +26,16 @@ int main(int argc, char * argv[]){
     int size, multiplier;
     array_information array_info;
 
-    // get size from param2
+    // reading in argument information
+    // NOTE: multiplier pseudo-increases the size of the data set,
     size = strtol(argv[2], NULL, 10);
-
-    // get multiplier from param3
-    // NOTE: multiplier pseudo-increases the size of the data set
     multiplier = strtol(argv[3], NULL, 10);
 
     time_t array_start = time(NULL);
 
     // create useful arrays
-    long * answers = malloc(sizeof(long) * size * 5);
-    if(allocate_structs(argv[1], &array_info, 1, answers, size) == 1)
+    long * answer = malloc(sizeof(long) * 5);
+    if(allocate_structs(argv[1], &array_info, 1, answer, NULL, 1, size) == 1)
         return 1;
 
     time_t array_end = time(NULL);
@@ -47,24 +45,11 @@ int main(int argc, char * argv[]){
 
 
     // check array and determine biggest value
-    int index;
-    long * temp_answers;
-
     for(int k = 0; k < multiplier; k++){
-        index = 0;
-        temp_answers = answers;
-        *temp_answers = 0;
-
         for(int i = 0; i < size; i++){
             for(int j = 0; j < size; j++){
-                calculate(&array_info, i, j, temp_answers);
+                calculate(&array_info, i, j, answer);
             }
-            // update index if new answer is bigger
-            if(*temp_answers > array_info.answers[index * 5])
-                index = i;
-
-            temp_answers += 5;
-            *temp_answers = 0;
         }
     }
 
@@ -75,11 +60,11 @@ int main(int argc, char * argv[]){
     long sum;
     int a, b, c, d;
 
-    sum = answers[(index * 5) + 0];
-    a = answers[(index * 5) + 1];
-    b = answers[(index * 5) + 2];
-    c = answers[(index * 5) + 3];
-    d = answers[(index * 5) + 4];
+    sum = answer[0];
+    a = answer[1];
+    b = answer[2];
+    c = answer[3];
+    d = answer[4];
 
     time_t end = clock();
     time_t end2 = time(NULL);
@@ -93,7 +78,7 @@ int main(int argc, char * argv[]){
 
     // free the malloc'ed memory
     free(array_info.numbers);
-    free(answers);
+    free(answer);
 
     return 0;
 }

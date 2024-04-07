@@ -14,7 +14,7 @@ typedef struct parallel_args {
 
 /* --- functions --- */
 
-// function call for a thread to begin calculating a row
+// function call for a thread to begin calculating rows
 // input: parallel_args as void *
 // output: NULL
 void * calculate_step(void *);
